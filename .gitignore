@@ -1,0 +1,43 @@
+# Environment
+.env
+.env.local
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+*.egg-info/
+
+# Node
+node_modules/
+dist/
+.vite/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Build artifacts
+extension/sidepanel/tsconfig.tsbuildinfo
+extension/background.bundle.js
+
+# Internal planning docs (not submission material)
+docs/plans/
+
+# Submission docs (contain project-specific metadata)
+docs/submission-checklist.md
+docs/hackathon-submission-metadata.txt
+docs/feedback-survey-responses.md
+
+# Screenshots (uploaded separately to Devpost)
+screenshots/
