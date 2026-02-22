@@ -1,0 +1,80 @@
+"""Tests for session manager — concurrency control and idle cleanup."""
+import asyncio
+import os
+import sys
+import time
+
+import pytest
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "backend"))
+
+
+class FakeAgent:
+    """Minimal agent stub for testing session manager."""
+    def __init__(self):
+        self._last_activity = time.monotonic()
+        self.closed = False
+
+    @property
+    def idle_seconds(self):
+        return time.monotonic() - self._last_activity
+
+    def touch(self):
+        self._last_activity = time.monotonic()
+
+    async def close(self):
+        self.closed = True
+
+
+@pytest.mark.asyncio
+async def test_add_and_get_session():
+    from services.session_manager import SessionManager
+    sm = SessionManager(max_sessions=3)
+    agent = FakeAgent()
+    sm.add("sid1", "sess1", agent)
+    result = sm.get_by_sid("sid1")
+    assert result is not None
+    assert result["session_id"] == "sess1"
+    assert result["agent"] is agent
+    assert sm.active_count == 1
+
+
+@pytest.mark.asyncio
+async def test_max_sessions_enforced():
+    from services.session_manager import SessionManager
+    sm = SessionManager(max_sessions=2)
+    sm.add("sid1", "s1", FakeAgent())
+    sm.add("sid2", "s2", FakeAgent())
+    assert sm.active_count == 2
+    assert sm.at_capacity is True
+
+
+@pytest.mark.asyncio
+async def test_cleanup_removes_session():
+    from services.session_manager import SessionManager
+    sm = SessionManager(max_sessions=3)
+    agent = FakeAgent()
+    sm.add("sid1", "s1", agent)
+    await sm.cleanup("sid1")
+    assert sm.active_count == 0
+    assert sm.get_by_sid("sid1") is None
+    assert agent.closed is True
+
+
+@pytest.mark.asyncio
+async def test_cleanup_nonexistent_sid():
+    from services.session_manager import SessionManager
+    sm = SessionManager(max_sessions=3)
+    await sm.cleanup("nonexistent")  # Should not raise
+
+
+@pytest.mark.asyncio
+async def test_cleanup_all():
+    from services.session_manager import SessionManager
+    sm = SessionManager(max_sessions=3)
+    agents = [FakeAgent() for _ in range(3)]
+    for i, agent in enumerate(agents):
+        sm.add(f"sid{i}", f"s{i}", agent)
+    await sm.cleanup_all()
+    assert sm.active_count == 0
+    assert all(a.closed for a in agents)
