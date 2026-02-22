@@ -1,0 +1,153 @@
+/* extension/sidepanel/src/styles/index.css — WCAG-compliant, high-contrast */
+
+:root {
+  --bg-primary: #1a1a2e;
+  --bg-secondary: #16213e;
+  --bg-surface: #0f3460;
+  --text-primary: #e8e8e8;
+  --text-secondary: #b0b0b0;
+  --accent: #00d2ff;
+  --accent-hover: #33ddff;
+  --danger: #ff4757;
+  --success: #2ed573;
+  --warning: #ffa502;
+  --border: #333;
+  --radius: 8px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0, 0, 0, 0); border: 0;
+}
+
+.app-container {
+  display: flex; flex-direction: column;
+  height: 100vh; overflow: hidden;
+}
+
+.app-header {
+  padding: 12px 16px;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border);
+}
+
+.app-title { font-size: 18px; font-weight: 700; color: var(--accent); }
+.app-subtitle { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+
+.status-bar {
+  display: flex; align-items: center; gap: 6px; margin-top: 8px;
+}
+
+.dot {
+  width: 8px; height: 8px; border-radius: 50%;
+}
+.dot.connected { background: var(--success); }
+.dot.disconnected { background: var(--danger); }
+.dot.recording { background: var(--danger); animation: pulse 1s infinite; }
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.status-text { font-size: 12px; color: var(--text-secondary); }
+
+.app-main {
+  flex: 1; overflow-y: auto; padding: 12px;
+  display: flex; flex-direction: column; gap: 12px;
+}
+
+.browser-view {
+  border: 1px solid var(--border); border-radius: var(--radius);
+  overflow: hidden; min-height: 120px; background: var(--bg-secondary);
+}
+
+.browser-screenshot { width: 100%; display: block; }
+
+.browser-placeholder {
+  padding: 24px; text-align: center; color: var(--text-secondary);
+}
+.placeholder-hint { font-size: 12px; margin-top: 8px; font-style: italic; }
+
+.transcript-panel {
+  flex: 1; min-height: 100px; overflow-y: auto;
+  border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 8px; background: var(--bg-secondary);
+}
+
+.transcript-empty { color: var(--text-secondary); text-align: center; padding: 16px; }
+
+.transcript-entry { padding: 6px 0; border-bottom: 1px solid var(--border); }
+.transcript-entry:last-of-type { border-bottom: none; }
+
+.transcript-role {
+  font-weight: 600; font-size: 11px; text-transform: uppercase;
+  margin-right: 8px;
+}
+.transcript-user .transcript-role { color: var(--accent); }
+.transcript-assistant .transcript-role { color: var(--success); }
+.transcript-system .transcript-role { color: var(--warning); }
+
+.transcript-text { font-size: 13px; }
+
+.text-input-form { display: flex; gap: 8px; }
+
+.text-input {
+  flex: 1; padding: 8px 12px;
+  background: var(--bg-secondary); border: 1px solid var(--border);
+  border-radius: var(--radius); color: var(--text-primary);
+  font-size: 13px; outline: none;
+}
+.text-input:focus { border-color: var(--accent); }
+.text-input:disabled { opacity: 0.5; }
+
+.btn {
+  padding: 8px 16px; border: none; border-radius: var(--radius);
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  transition: background 0.2s;
+}
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.btn-start { background: var(--success); color: #000; }
+.btn-start:hover:not(:disabled) { background: #3be882; }
+
+.btn-stop { background: var(--danger); color: #fff; }
+.btn-stop:hover:not(:disabled) { background: #ff6b7d; }
+
+.btn-mic { background: var(--bg-surface); color: var(--text-primary); }
+.btn-mic-active { background: var(--danger); color: #fff; }
+
+.btn-send { background: var(--accent); color: #000; }
+.btn-send:hover:not(:disabled) { background: var(--accent-hover); }
+
+.app-footer {
+  padding: 12px 16px;
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+}
+
+.voice-controls {
+  display: flex; gap: 8px; justify-content: center;
+}
+
+.keyboard-hints {
+  text-align: center; margin-top: 8px;
+  font-size: 11px; color: var(--text-secondary);
+}
+
+kbd {
+  padding: 1px 4px; background: var(--bg-surface);
+  border: 1px solid var(--border); border-radius: 3px;
+  font-family: monospace; font-size: 10px;
+}
