@@ -1,0 +1,50 @@
+# tests/test_action_planner.py
+"""Tests for action planner — Gemini Computer Use integration."""
+import os
+import sys
+import json
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "backend"))
+
+
+def test_action_prompt_has_required_actions():
+    from tools.action_planner import ACTION_PROMPT
+    for action in ["click", "type", "scroll", "key", "hover", "go_back", "wait", "done"]:
+        assert action in ACTION_PROMPT, f"Missing action '{action}' in ACTION_PROMPT"
+
+
+def test_action_prompt_has_coordinate_format():
+    from tools.action_planner import ACTION_PROMPT
+    assert "coordinate" in ACTION_PROMPT
+    assert "1000" in ACTION_PROMPT  # Normalized grid reference
+
+
+def test_parse_action_response_click():
+    from tools.action_planner import _parse_action_response
+    raw = '{"action": "click", "coordinate": [450, 320]}'
+    result = _parse_action_response(raw)
+    assert result["action"] == "click"
+    assert result["coordinate"] == [450, 320]
+
+
+def test_parse_action_response_done():
+    from tools.action_planner import _parse_action_response
+    raw = '{"action": "done", "summary": "Found 5 results"}'
+    result = _parse_action_response(raw)
+    assert result["action"] == "done"
+    assert result["summary"] == "Found 5 results"
+
+
+def test_parse_action_response_markdown_wrapped():
+    from tools.action_planner import _parse_action_response
+    raw = '```json\n{"action": "scroll", "coordinate": [500, 500], "direction": "down", "amount": 3}\n```'
+    result = _parse_action_response(raw)
+    assert result["action"] == "scroll"
+
+
+def test_parse_action_response_invalid():
+    from tools.action_planner import _parse_action_response
+    raw = "I don't know what to do"
+    result = _parse_action_response(raw)
+    assert result["action"] == "done"
+    assert "summary" in result
