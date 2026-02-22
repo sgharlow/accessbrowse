@@ -34,9 +34,7 @@ extension/background.bundle.js
 # Internal planning docs (not submission material)
 docs/plans/
 
-# Submission docs (contain project-specific metadata)
-docs/submission-checklist.md
-docs/hackathon-submission-metadata.txt
+# Internal feedback (not submission material)
 docs/feedback-survey-responses.md
 
 # Screenshots (uploaded separately to Devpost)
