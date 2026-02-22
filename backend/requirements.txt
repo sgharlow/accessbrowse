@@ -1,0 +1,6 @@
+fastapi==0.115.12
+uvicorn[standard]==0.34.2
+websockets>=14.0
+google-genai>=1.0.0
+# google-adk not needed — using GenAI SDK directly for both Live API and Computer Use
+python-dotenv==1.1.0
