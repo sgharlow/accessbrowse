@@ -56,8 +56,8 @@ async def websocket_endpoint(ws: WebSocket):
     async def send_to_client(msg: dict):
         try:
             await ws.send_json(msg)
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(f"Failed to send to client {sid}: {e}")
 
     try:
         async for raw in ws.iter_text():

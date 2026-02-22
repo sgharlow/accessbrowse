@@ -137,7 +137,7 @@ class VoiceAgent:
     async def _event_loop(self) -> None:
         """Process streaming responses from Gemini Live API."""
         try:
-            while True:
+            while not self._closed and self._live:
                 turn = self._live.receive()
                 async for response in turn:
                     # Handle server content (audio + text)
@@ -218,6 +218,8 @@ class VoiceAgent:
             ))
 
         # Send tool results back to Live API
+        if self._closed or not self._live:
+            return
         await self._live.send(
             input=types.LiveClientToolResponse(function_responses=results)
         )
@@ -245,6 +247,8 @@ class VoiceAgent:
 
     async def send_audio(self, audio_b64: str) -> None:
         """Forward base64 PCM audio from client mic to Gemini Live API."""
+        if self._closed or not self._live:
+            return
         self._last_activity = time.monotonic()
         try:
             from google.genai import types
@@ -262,6 +266,8 @@ class VoiceAgent:
 
     async def send_text(self, text: str) -> None:
         """Forward text input to Gemini Live API."""
+        if self._closed or not self._live:
+            return
         self._last_activity = time.monotonic()
         try:
             from google.genai import types
