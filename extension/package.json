@@ -1,0 +1,11 @@
+{
+  "name": "accessbrowse-extension",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "esbuild background.js --bundle --outfile=background.bundle.js --format=iife"
+  },
+  "devDependencies": {
+    "esbuild": "^0.24.0"
+  }
+}
