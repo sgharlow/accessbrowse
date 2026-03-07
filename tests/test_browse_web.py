@@ -125,3 +125,136 @@ async def test_browse_web_max_steps():
         ap.plan_action = original
         bw._NAVIGATE_SETTLE = orig_nav
         bw._ACTION_SETTLE = orig_act
+
+
+@pytest.mark.asyncio
+async def test_browse_web_screenshot_timeout():
+    """browse_web should handle screenshot timeout gracefully."""
+    import tools.browse_web as bw
+    from tools.browse_web import browse_web
+
+    screenshot_event = asyncio.Event()
+    action_event = asyncio.Event()
+
+    class FakeRef:
+        _screenshot_data = {}
+        _action_data = {"success": True}
+
+    async def fake_send(msg):
+        if msg.get("type") == "execute_action":
+            action_event.set()
+        # Don't set screenshot_event — simulate timeout
+
+    action_event.set()
+
+    orig_nav = bw._NAVIGATE_SETTLE
+    orig_act = bw._ACTION_SETTLE
+    orig_timeout = bw.SCREENSHOT_TIMEOUT
+    bw._NAVIGATE_SETTLE = 0
+    bw._ACTION_SETTLE = 0
+    bw.SCREENSHOT_TIMEOUT = 0.1
+    try:
+        result = await browse_web(
+            url="https://example.com",
+            task="test",
+            send_to_client=fake_send,
+            screenshot_event=screenshot_event,
+            screenshot_data_ref=FakeRef(),
+            action_event=action_event,
+            action_data_ref=FakeRef(),
+        )
+        assert "screenshot" in result.lower() or "extension" in result.lower()
+    finally:
+        bw._NAVIGATE_SETTLE = orig_nav
+        bw._ACTION_SETTLE = orig_act
+        bw.SCREENSHOT_TIMEOUT = orig_timeout
+
+
+@pytest.mark.asyncio
+async def test_browse_web_missing_image():
+    """browse_web should handle missing image in screenshot data."""
+    import tools.browse_web as bw
+    from tools.browse_web import browse_web
+
+    screenshot_event = asyncio.Event()
+    action_event = asyncio.Event()
+
+    class FakeRef:
+        _screenshot_data = {"url": "https://example.com"}
+        _action_data = {"success": True}
+
+    async def fake_send(msg):
+        if msg.get("type") == "request_screenshot":
+            screenshot_event.set()
+        elif msg.get("type") == "execute_action":
+            action_event.set()
+
+    screenshot_event.set()
+    action_event.set()
+
+    orig_nav = bw._NAVIGATE_SETTLE
+    orig_act = bw._ACTION_SETTLE
+    bw._NAVIGATE_SETTLE = 0
+    bw._ACTION_SETTLE = 0
+    try:
+        result = await browse_web(
+            url="https://example.com",
+            task="test",
+            send_to_client=fake_send,
+            screenshot_event=screenshot_event,
+            screenshot_data_ref=FakeRef(),
+            action_event=action_event,
+            action_data_ref=FakeRef(),
+        )
+        assert "screenshot" in result.lower() or "failed" in result.lower()
+    finally:
+        bw._NAVIGATE_SETTLE = orig_nav
+        bw._ACTION_SETTLE = orig_act
+
+
+def test_describe_action_click():
+    from tools.browse_web import _describe_action
+    desc = _describe_action({"action": "click", "coordinate": [100, 200]})
+    assert "clicking" in desc.lower()
+
+
+def test_describe_action_type():
+    from tools.browse_web import _describe_action
+    desc = _describe_action({"action": "type", "text": "hello"})
+    assert "typing" in desc.lower()
+
+
+def test_describe_action_scroll():
+    from tools.browse_web import _describe_action
+    desc = _describe_action({"action": "scroll", "direction": "down"})
+    assert "scrolling" in desc.lower()
+
+
+def test_describe_action_hover():
+    from tools.browse_web import _describe_action
+    desc = _describe_action({"action": "hover"})
+    assert "hovering" in desc.lower()
+
+
+def test_describe_action_key():
+    from tools.browse_web import _describe_action
+    desc = _describe_action({"action": "key", "key": "Enter"})
+    assert "Enter" in desc
+
+
+def test_describe_action_go_back():
+    from tools.browse_web import _describe_action
+    desc = _describe_action({"action": "go_back"})
+    assert "going back" in desc.lower()
+
+
+def test_describe_action_wait():
+    from tools.browse_web import _describe_action
+    desc = _describe_action({"action": "wait"})
+    assert "waiting" in desc.lower()
+
+
+def test_describe_action_unknown():
+    from tools.browse_web import _describe_action
+    desc = _describe_action({"action": "custom_thing"})
+    assert "custom_thing" in desc

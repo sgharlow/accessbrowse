@@ -48,3 +48,75 @@ def test_parse_action_response_invalid():
     result = _parse_action_response(raw)
     assert result["action"] == "done"
     assert "summary" in result
+
+
+def test_parse_action_response_type_action():
+    from tools.action_planner import _parse_action_response
+    raw = '{"action": "type", "coordinate": [300, 200], "text": "hello world"}'
+    result = _parse_action_response(raw)
+    assert result["action"] == "type"
+    assert result["coordinate"] == [300, 200]
+    assert result["text"] == "hello world"
+
+
+def test_parse_action_response_scroll_with_amount():
+    from tools.action_planner import _parse_action_response
+    raw = '{"action": "scroll", "coordinate": [500, 500], "direction": "up", "amount": 5}'
+    result = _parse_action_response(raw)
+    assert result["action"] == "scroll"
+    assert result["direction"] == "up"
+    assert result["amount"] == 5
+
+
+def test_parse_action_response_key_action():
+    from tools.action_planner import _parse_action_response
+    raw = '{"action": "key", "key": "Escape"}'
+    result = _parse_action_response(raw)
+    assert result["action"] == "key"
+    assert result["key"] == "Escape"
+
+
+def test_parse_action_response_hover():
+    from tools.action_planner import _parse_action_response
+    raw = '{"action": "hover", "coordinate": [750, 250]}'
+    result = _parse_action_response(raw)
+    assert result["action"] == "hover"
+    assert result["coordinate"] == [750, 250]
+
+
+def test_parse_action_response_go_back():
+    from tools.action_planner import _parse_action_response
+    raw = '{"action": "go_back"}'
+    result = _parse_action_response(raw)
+    assert result["action"] == "go_back"
+
+
+def test_parse_action_response_wait():
+    from tools.action_planner import _parse_action_response
+    raw = '{"action": "wait", "duration": 3}'
+    result = _parse_action_response(raw)
+    assert result["action"] == "wait"
+    assert result["duration"] == 3
+
+
+def test_parse_action_response_markdown_no_json_prefix():
+    from tools.action_planner import _parse_action_response
+    raw = '```\n{"action": "click", "coordinate": [100, 100]}\n```'
+    result = _parse_action_response(raw)
+    assert result["action"] == "click"
+    assert result["coordinate"] == [100, 100]
+
+
+def test_parse_action_response_whitespace_padded():
+    from tools.action_planner import _parse_action_response
+    raw = '  \n\n  {"action": "click", "coordinate": [200, 300]}  \n\n  '
+    result = _parse_action_response(raw)
+    assert result["action"] == "click"
+    assert result["coordinate"] == [200, 300]
+
+
+def test_action_prompt_template_substitution():
+    from tools.action_planner import ACTION_PROMPT
+    rendered = ACTION_PROMPT.format(goal="test goal", url="https://x.com")
+    assert "test goal" in rendered
+    assert "https://x.com" in rendered

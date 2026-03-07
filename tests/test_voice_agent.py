@@ -74,3 +74,89 @@ async def test_silence_frame_is_valid_pcm():
     silence_bytes = base64.b64decode(agent._silence_b64)
     assert len(silence_bytes) == 3200
     assert silence_bytes == b"\x00" * 3200
+
+
+@pytest.mark.asyncio
+async def test_voice_agent_closed_flag_default():
+    from agents.voice_agent import VoiceAgent
+    send_fn = FakeSendFn()
+    agent = VoiceAgent(send_to_client=send_fn)
+    assert agent._closed is False
+
+
+@pytest.mark.asyncio
+async def test_voice_agent_send_audio_when_closed():
+    from agents.voice_agent import VoiceAgent
+    send_fn = FakeSendFn()
+    agent = VoiceAgent(send_to_client=send_fn)
+    agent._closed = True
+    await agent.send_audio("dGVzdA==")
+    assert len(send_fn.messages) == 0
+
+
+@pytest.mark.asyncio
+async def test_voice_agent_send_text_when_closed():
+    from agents.voice_agent import VoiceAgent
+    send_fn = FakeSendFn()
+    agent = VoiceAgent(send_to_client=send_fn)
+    agent._closed = True
+    await agent.send_text("hello")
+    assert len(send_fn.messages) == 0
+
+
+@pytest.mark.asyncio
+async def test_voice_agent_send_audio_no_live_session():
+    from agents.voice_agent import VoiceAgent
+    send_fn = FakeSendFn()
+    agent = VoiceAgent(send_to_client=send_fn)
+    # agent._live is None by default; guard should exit early
+    await agent.send_audio("dGVzdA==")
+    assert len(send_fn.messages) == 0
+
+
+@pytest.mark.asyncio
+async def test_voice_agent_send_text_no_live_session():
+    from agents.voice_agent import VoiceAgent
+    send_fn = FakeSendFn()
+    agent = VoiceAgent(send_to_client=send_fn)
+    # agent._live is None by default; guard should exit early
+    await agent.send_text("hello")
+    assert len(send_fn.messages) == 0
+
+
+@pytest.mark.asyncio
+async def test_voice_agent_close_no_tasks():
+    from agents.voice_agent import VoiceAgent
+    send_fn = FakeSendFn()
+    agent = VoiceAgent(send_to_client=send_fn)
+    await agent.close()
+    assert agent._closed is True
+
+
+@pytest.mark.asyncio
+async def test_voice_agent_touch_updates_activity():
+    from agents.voice_agent import VoiceAgent
+    send_fn = FakeSendFn()
+    agent = VoiceAgent(send_to_client=send_fn)
+    await asyncio.sleep(0.1)
+    assert agent.idle_seconds >= 0.1
+    agent.touch()
+    assert agent.idle_seconds < 0.05
+
+
+@pytest.mark.asyncio
+async def test_voice_agent_screenshot_overwrites():
+    from agents.voice_agent import VoiceAgent
+    send_fn = FakeSendFn()
+    agent = VoiceAgent(send_to_client=send_fn)
+    agent.on_screenshot({"image": "first"})
+    agent.on_screenshot({"image": "second"})
+    assert agent._screenshot_data["image"] == "second"
+    assert agent._screenshot_event.is_set()
+
+
+@pytest.mark.asyncio
+async def test_voice_agent_tool_labels_exist():
+    from agents.voice_agent import _TOOL_LABELS
+    assert "browse_web" in _TOOL_LABELS
+    assert "read_page" in _TOOL_LABELS

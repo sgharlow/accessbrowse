@@ -29,3 +29,27 @@ def test_browse_limits():
     assert MAX_BROWSE_STEPS == 10
     assert SCREENSHOT_TIMEOUT == 15
     assert ACTION_TIMEOUT == 30
+
+
+def test_system_prompt_exists():
+    from config import SYSTEM_PROMPT
+    assert isinstance(SYSTEM_PROMPT, str)
+    assert len(SYSTEM_PROMPT) > 0
+    lower = SYSTEM_PROMPT.lower()
+    assert "browse" in lower or "accessibility" in lower
+
+
+def test_audio_format_is_pcm():
+    from config import AUDIO_FORMAT
+    assert "pcm" in AUDIO_FORMAT.lower()
+
+
+def test_backend_port_is_int():
+    from config import BACKEND_PORT
+    assert isinstance(BACKEND_PORT, int)
+
+
+def test_screenshot_quality_valid():
+    from config import SCREENSHOT_QUALITY
+    assert (isinstance(SCREENSHOT_QUALITY, int) and 0 <= SCREENSHOT_QUALITY <= 100) or \
+           (isinstance(SCREENSHOT_QUALITY, float) and 0 <= SCREENSHOT_QUALITY <= 1)
