@@ -12,7 +12,7 @@
 - [x] Public code repo — github.com/sgharlow/accessbrowse
 - [x] Spin-up instructions in README — step-by-step with exact commands (see `README.md`)
 - [ ] Proof of GCP deployment — screen recording of Cloud Run console or health endpoint
-- [ ] Architecture diagram (PNG) — clear visual of system components
+- [x] Architecture diagram (SVG) — `docs/architecture-diagram.svg` — clear visual of system components
 - [ ] Demo video — under 4 minutes, real-time demonstrations, no mockups (see `docs/demo-script.md`)
 
 ## Bonus Points
@@ -56,7 +56,7 @@
   - Title: "AccessBrowse — Voice-Driven Web Browser for Accessibility | #GeminiLiveAgentChallenge"
 
 ### Publish
-- [ ] Render architecture diagram to PNG (use mermaid.live or `npx mmdc`)
+- [x] Architecture diagram rendered to SVG (`docs/architecture-diagram.svg`)
 - [ ] Publish blog post from `docs/blog-post.md` to dev.to, Medium, or similar
   - MUST include: "This blog post was created for the Gemini Live Agent Challenge hackathon"
   - MUST include: #GeminiLiveAgentChallenge
