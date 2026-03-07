@@ -1,5 +1,7 @@
 # AccessBrowse — Voice-Driven Web Browser for Accessibility
 
+[![CI](https://github.com/sgharlow/accessbrowse/actions/workflows/ci.yml/badge.svg)](https://github.com/sgharlow/accessbrowse/actions/workflows/ci.yml)
+
 > Browse any website using voice commands. Built for visually impaired users
 > with Gemini Live API (real-time voice) and Gemini Computer Use (visual browsing).
 
@@ -184,7 +186,7 @@ See `backend/deploy.sh` for the full Infrastructure-as-Code deployment script.
 # Install test dependencies
 pip install pytest pytest-asyncio
 
-# Python unit tests (backend)
+# Python unit tests (107 tests across 7 suites)
 python -m pytest tests/ -v
 
 # Content script tests

@@ -23,7 +23,8 @@
 
 ## Code Quality
 
-- [x] Python unit tests passing (`python -m pytest tests/ -v`)
+- [x] GitHub Actions CI pipeline (pytest + JS tests on push/PR)
+- [x] Python unit tests passing — 107 tests, 7 suites (`python -m pytest tests/ -v`)
 - [x] Content script tests passing (`node tests/test_content_actions.js`)
 - [x] E2E test suite created (`tests/e2e/`)
 - [x] No hardcoded credentials or API keys in source
