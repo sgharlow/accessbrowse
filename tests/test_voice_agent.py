@@ -160,3 +160,65 @@ async def test_voice_agent_tool_labels_exist():
     from agents.voice_agent import _TOOL_LABELS
     assert "browse_web" in _TOOL_LABELS
     assert "read_page" in _TOOL_LABELS
+
+
+@pytest.mark.asyncio
+async def test_voice_agent_on_action_result_overwrites():
+    from agents.voice_agent import VoiceAgent
+    send_fn = FakeSendFn()
+    agent = VoiceAgent(send_to_client=send_fn)
+    agent.on_action_result({"success": True, "value": "first"})
+    agent.on_action_result({"success": False, "value": "second"})
+    assert agent._action_data["success"] is False
+    assert agent._action_data["value"] == "second"
+
+
+@pytest.mark.asyncio
+async def test_voice_agent_double_close():
+    from agents.voice_agent import VoiceAgent
+    send_fn = FakeSendFn()
+    agent = VoiceAgent(send_to_client=send_fn)
+    await agent.close()
+    assert agent._closed is True
+    await agent.close()  # should not raise
+    assert agent._closed is True
+
+
+@pytest.mark.asyncio
+async def test_voice_agent_action_event_clears_and_sets():
+    from agents.voice_agent import VoiceAgent
+    send_fn = FakeSendFn()
+    agent = VoiceAgent(send_to_client=send_fn)
+    agent._action_event.clear()
+    assert not agent._action_event.is_set()
+    agent.on_action_result({"ok": True})
+    assert agent._action_event.is_set()
+
+
+@pytest.mark.asyncio
+async def test_voice_agent_screenshot_event_clears_and_sets():
+    from agents.voice_agent import VoiceAgent
+    send_fn = FakeSendFn()
+    agent = VoiceAgent(send_to_client=send_fn)
+    agent._screenshot_event.clear()
+    assert not agent._screenshot_event.is_set()
+    agent.on_screenshot({"image": "data"})
+    assert agent._screenshot_event.is_set()
+
+
+@pytest.mark.asyncio
+async def test_voice_agent_init_no_session():
+    from agents.voice_agent import VoiceAgent
+    send_fn = FakeSendFn()
+    agent = VoiceAgent(send_to_client=send_fn)
+    assert agent._session is None
+    assert agent._live is None
+
+
+@pytest.mark.asyncio
+async def test_voice_agent_init_no_tasks():
+    from agents.voice_agent import VoiceAgent
+    send_fn = FakeSendFn()
+    agent = VoiceAgent(send_to_client=send_fn)
+    assert agent._receive_task is None
+    assert agent._keepalive_task is None

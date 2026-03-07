@@ -143,3 +143,64 @@ async def test_session_stores_created_at():
     result = sm.get_by_sid("sid1")
     assert "created_at" in result
     assert isinstance(result["created_at"], float)
+
+
+@pytest.mark.asyncio
+async def test_cleanup_nonexistent_sid_preserves_existing():
+    """Cleanup of nonexistent sid should not raise and should preserve existing sessions."""
+    from services.session_manager import SessionManager
+    sm = SessionManager(max_sessions=5)
+    sm.add("sid1", "s1", FakeAgent())
+    sm.add("sid2", "s2", FakeAgent())
+    await sm.cleanup("nonexistent")  # Should not raise
+    assert sm.active_count == 2
+    assert sm.get_by_sid("sid1") is not None
+    assert sm.get_by_sid("sid2") is not None
+
+
+@pytest.mark.asyncio
+async def test_start_cleanup_loop_idempotent():
+    """Calling start_cleanup_loop() twice doesn't create duplicate tasks."""
+    from services.session_manager import SessionManager
+    sm = SessionManager(max_sessions=3)
+    sm.start_cleanup_loop()
+    first_task = sm._cleanup_task
+    assert first_task is not None
+    sm.start_cleanup_loop()
+    second_task = sm._cleanup_task
+    assert first_task is second_task
+    # Cleanup
+    first_task.cancel()
+    try:
+        await first_task
+    except asyncio.CancelledError:
+        pass
+
+
+@pytest.mark.asyncio
+async def test_active_count_after_cleanup():
+    """Add 2 sessions, cleanup 1, verify active_count is 1."""
+    from services.session_manager import SessionManager
+    sm = SessionManager(max_sessions=5)
+    agent1 = FakeAgent()
+    agent2 = FakeAgent()
+    sm.add("sid1", "s1", agent1)
+    sm.add("sid2", "s2", agent2)
+    assert sm.active_count == 2
+    await sm.cleanup("sid1")
+    assert sm.active_count == 1
+    assert sm.get_by_sid("sid2") is not None
+    assert agent1.closed is True
+    assert agent2.closed is False
+
+
+@pytest.mark.asyncio
+async def test_session_data_has_session_id():
+    """Add a session, verify the stored dict has 'session_id' key."""
+    from services.session_manager import SessionManager
+    sm = SessionManager(max_sessions=3)
+    agent = FakeAgent()
+    sm.add("sid1", "my-session-123", agent)
+    result = sm.get_by_sid("sid1")
+    assert "session_id" in result
+    assert result["session_id"] == "my-session-123"

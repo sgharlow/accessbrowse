@@ -120,3 +120,41 @@ def test_action_prompt_template_substitution():
     rendered = ACTION_PROMPT.format(goal="test goal", url="https://x.com")
     assert "test goal" in rendered
     assert "https://x.com" in rendered
+
+
+def test_parse_nested_code_block():
+    from tools.action_planner import _parse_action_response
+    raw = '```json\n{"action": "done", "summary": "found ```code``` in page"}\n```'
+    result = _parse_action_response(raw)
+    assert result["action"] == "done"
+    assert "```code```" in result["summary"]
+
+
+def test_parse_empty_string():
+    from tools.action_planner import _parse_action_response
+    result = _parse_action_response("")
+    assert result["action"] == "done"
+    assert "trouble" in result["summary"].lower()
+
+
+def test_parse_just_backticks():
+    from tools.action_planner import _parse_action_response
+    result = _parse_action_response("```\n```")
+    assert result["action"] == "done"
+
+
+def test_action_prompt_format_substitution():
+    from tools.action_planner import ACTION_PROMPT
+    rendered = ACTION_PROMPT.format(goal="test goal", url="http://example.com")
+    assert "test goal" in rendered
+    assert "http://example.com" in rendered
+
+
+def test_parse_valid_json_with_extra_fields():
+    from tools.action_planner import _parse_action_response
+    raw = '{"action": "click", "coordinate": [100, 200], "extra_field": "extra_value", "debug": true}'
+    result = _parse_action_response(raw)
+    assert result["action"] == "click"
+    assert result["coordinate"] == [100, 200]
+    assert result["extra_field"] == "extra_value"
+    assert result["debug"] is True
