@@ -180,6 +180,64 @@ After deployment, update the extension to point to your production URL:
 
 See `backend/deploy.sh` for the full Infrastructure-as-Code deployment script.
 
+## Testing End-to-End (Voice + Browsing)
+
+To verify the full pipeline — voice input, Gemini Live API, Computer Use visual browsing, and audio output — follow these steps:
+
+### Prerequisites
+
+- Google Chrome (latest)
+- Microphone and speakers/headphones
+- The backend must be running (either locally or on Cloud Run)
+
+### 1. Verify the backend is healthy
+
+```bash
+# Cloud Run (production)
+curl https://accessbrowse-n6oitfxdra-uc.a.run.app/health
+# Expected: {"status":"ok","active_sessions":0,"max_sessions":3}
+
+# Or local development
+curl http://localhost:8080/health
+```
+
+### 2. Load the Chrome extension
+
+1. Open `chrome://extensions` in Chrome
+2. Enable **"Developer mode"** (toggle in top right)
+3. Click **"Load unpacked"** → select the `extension/` folder
+4. The AccessBrowse icon appears in your toolbar
+
+### 3. Configure the backend URL (optional)
+
+The extension defaults to the production Cloud Run URL (`wss://accessbrowse-n6oitfxdra-uc.a.run.app/ws`). For local development, open the sidepanel settings and change the backend URL to `ws://localhost:8080/ws`.
+
+### 4. Run the end-to-end test
+
+1. **Navigate** to any website (e.g., amazon.com, zillow.com, cnn.com)
+2. **Click the AccessBrowse icon** → the sidepanel opens
+3. **Click "Start Session"** → the status bar should show **"Connected"**
+   - Check the Service Worker console (`chrome://extensions` → AccessBrowse → "Inspect views: service worker") for `[AB] WebSocket connected`
+4. **Click the mic button** and speak a command:
+   - *"Find me noise-canceling headphones on Amazon"*
+   - *"Search for apartments in Seattle on Zillow"*
+   - *"Read me today's top headlines on CNN"*
+5. **Watch the pipeline execute:**
+   - Status changes: Connected → Listening → Browsing
+   - The page navigates and interacts automatically (clicks, types, scrolls)
+   - Gemini speaks the results back through your speakers at 24kHz
+   - The sidepanel shows a live transcript of the conversation
+
+### 5. Troubleshooting
+
+| Symptom | Check |
+|---------|-------|
+| Sidepanel shows "Disconnected" | Service Worker console for WebSocket errors; verify backend is running |
+| No audio output | Browser volume; check offscreen document is created (`chrome://extensions`) |
+| Mic not working | Chrome prompted for mic permission — must click "Allow" |
+| Actions not executing | Content script must be injected — reload the target page after loading the extension |
+| "No active tab" errors | The target website tab must be the focused/active tab |
+
 ## Running Tests
 
 ```bash

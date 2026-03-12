@@ -50,6 +50,19 @@ We learned that **Gemini Live API tool calling** within a bidi-streaming session
 
 We also learned practical lessons about **Chrome MV3 constraints**: service workers have no DOM access (requiring an offscreen document for audio), `chrome.tabs.captureVisibleTab` requires the `activeTab` permission and the tab must be visible, and message passing between extension components is strictly JSON-serializable (so base64 encoding is the practical choice for audio and image data).
 
+## Try It Yourself
+
+1. Clone the repo: `git clone https://github.com/sgharlow/accessbrowse.git`
+2. Load the `extension/` folder in Chrome (`chrome://extensions` → Developer mode → Load unpacked)
+3. Navigate to any website (Amazon, Zillow, CNN, Wikipedia — anything works)
+4. Click the AccessBrowse icon → sidepanel opens → click **"Start Session"**
+5. Click the mic button and say: *"Find me noise-canceling headphones on Amazon"*
+6. Watch the page navigate autonomously — clicks, types, scrolls — then hear Gemini speak the results back at 24kHz
+
+The backend is live on Google Cloud Run at `accessbrowse-n6oitfxdra-uc.a.run.app`. No configuration needed — the extension connects to production automatically.
+
+**Verify backend health:** `curl https://accessbrowse-n6oitfxdra-uc.a.run.app/health`
+
 ## What's Next
 
 **Multi-tab browsing** is the most requested feature — allowing AccessBrowse to open comparison tabs (e.g., two apartment listings side by side) and switch between them via voice commands.
