@@ -1,5 +1,10 @@
 # AccessBrowse — Devpost Submission
 
+**Demo Video:** https://youtu.be/1BBzOFUTdKw
+**Blog Post:** https://dev.to/steve_harlow_0dbc0e910b6d/building-accessbrowse-voice-driven-web-browsing-with-gemini-ai-5cj4
+**IaC Deployment:** https://github.com/sgharlow/accessbrowse/blob/main/backend/deploy.sh
+**GDG Profile:** https://gdg.community.dev/u/mcm396/#/about
+
 ## Inspiration
 
 Over 2.2 billion people worldwide live with some form of visual impairment, according to the World Health Organization. Despite decades of progress in assistive technology, the modern web remains fundamentally visual. Single-page applications, dynamic JavaScript-driven layouts, and interactive elements that depend on visual context create constant barriers for users who are blind or have low vision. Traditional screen readers parse the DOM and read elements sequentially, but they struggle with complex layouts, overlapping content, and sites that rely on ARIA attributes that many developers never implement correctly.

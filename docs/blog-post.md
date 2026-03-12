@@ -133,6 +133,8 @@ Cloud Run is well-suited for this workload because the backend is stateful (WebS
 
 ## Try It Yourself
 
+**Watch the demo:** [https://youtu.be/1BBzOFUTdKw](https://youtu.be/1BBzOFUTdKw)
+
 AccessBrowse is open source: [github.com/sgharlow/accessbrowse](https://github.com/sgharlow/accessbrowse)
 
 The README includes step-by-step setup instructions. You need a Google Cloud account with Vertex AI enabled, Python 3.12+, Node.js 20+, and Google Chrome.
@@ -142,3 +144,5 @@ The README includes step-by-step setup instructions. You need a Google Cloud acc
 *Built with Google Gemini Live API, Gemini Computer Use, Cloud Run, and Vertex AI for the [Gemini Live Agent Challenge](https://googleliveagentchallenge.devpost.com/).*
 
 **#GeminiLiveAgentChallenge**
+
+*Published version: [dev.to](https://dev.to/steve_harlow_0dbc0e910b6d/building-accessbrowse-voice-driven-web-browsing-with-gemini-ai-5cj4)*

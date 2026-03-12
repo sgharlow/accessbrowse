@@ -5,6 +5,8 @@
 > Browse any website using voice commands. Built for visually impaired users
 > with Gemini Live API (real-time voice) and Gemini Computer Use (visual browsing).
 
+**[Watch the Demo Video](https://youtu.be/1BBzOFUTdKw)**
+
 ## What It Does
 
 Over 2.2 billion people worldwide have some form of visual impairment, yet the web remains overwhelmingly visual. Screen readers help with text content, but they struggle with modern single-page applications, dynamic layouts, and interactive elements that rely on visual context. Users who are blind or have low vision face constant barriers when trying to search for apartments, shop for products, or simply read the news.
@@ -292,7 +294,7 @@ accessbrowse/
 
 ## Hackathon
 
-Built for the [Gemini Live Agent Challenge](https://googleliveagentchallenge.devpost.com/)
+Built for the [Gemini Live Agent Challenge](https://googleliveagentchallenge.devpost.com/) | [Demo Video](https://youtu.be/1BBzOFUTdKw) | [Blog Post](https://dev.to/steve_harlow_0dbc0e910b6d/building-accessbrowse-voice-driven-web-browsing-with-gemini-ai-5cj4)
 
 **Track:** UI Navigator | **Category:** Gemini Live API + Gemini Computer Use
 
