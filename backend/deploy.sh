@@ -2,7 +2,7 @@
 # deploy.sh — Deploy AccessBrowse to Cloud Run
 set -e
 
-PROJECT_ID="${GOOGLE_CLOUD_PROJECT:-accessbrowse-hackathon}"
+PROJECT_ID="${GOOGLE_CLOUD_PROJECT:-aicin-477004}"
 REGION="us-central1"
 SERVICE="accessbrowse"
 

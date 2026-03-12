@@ -2,7 +2,7 @@
 DEVPOST SUBMISSION FORM — COPY/PASTE READY
 ============================================================
 Hackathon: Gemini Live Agent Challenge
-URL: https://googleliveagentchallenge.devpost.com/
+URL: https://geminiliveagentchallenge.devpost.com/
 Deadline: March 16, 2026 @ 5:00 PM PT
 ============================================================
 

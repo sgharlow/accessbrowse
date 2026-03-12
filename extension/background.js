@@ -3,7 +3,7 @@
 // Key change from AccessVoice: native WebSocket instead of Socket.IO.
 
 const BACKEND_URL_KEY = "backend_url";
-const DEFAULT_BACKEND_URL = "ws://localhost:8080/ws";
+const DEFAULT_BACKEND_URL = "wss://accessbrowse-n6oitfxdra-uc.a.run.app/ws";
 
 let ws = null;
 let reconnectAttempts = 0;

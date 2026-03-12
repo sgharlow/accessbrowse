@@ -2,7 +2,7 @@
 
 **Hackathon:** Gemini Live Agent Challenge
 **Deadline:** March 16, 2026 @ 5:00 PM PT
-**Devpost:** https://googleliveagentchallenge.devpost.com/
+**Devpost:** https://geminiliveagentchallenge.devpost.com/
 
 ---
 
@@ -25,7 +25,7 @@
 
 - [x] GitHub Actions CI pipeline (pytest + JS tests on push/PR)
 - [x] Python unit tests passing — 107 tests, 7 suites (`python -m pytest tests/ -v`)
-- [x] Content script tests passing (`node tests/test_content_actions.js`)
+- [x] Content script tests passing — 38 tests, 9/9 action types (`node tests/test_content_actions.js`)
 - [x] E2E test suite created (`tests/e2e/`)
 - [x] No hardcoded credentials or API keys in source
 - [x] `.env.example` provided with placeholder values
@@ -45,9 +45,12 @@
 ## Manual Actions (USER must do)
 
 ### Deploy
-- [ ] Set up GCP project and enable APIs (`gcloud services enable ...`)
+- [x] GCP project created: `accessbrowse` (project ID updated in config.py + deploy.sh)
+- [x] gcloud CLI authenticated as sgharlow@gmail.com, project set
+- [ ] **DEFERRED to Mar 8:** GCP billing account increase pending Google approval
+- [ ] Enable APIs: `gcloud services enable run.googleapis.com cloudbuild.googleapis.com artifactregistry.googleapis.com aiplatform.googleapis.com`
 - [ ] Run `./backend/deploy.sh` to deploy to Cloud Run
-- [ ] Update extension to point to production Cloud Run URL
+- [ ] Update extension backend URL (chrome.storage.local `backend_url` key) to `wss://<cloud-run-url>/ws`
 - [ ] Verify health endpoint returns 200
 
 ### Record
@@ -67,7 +70,7 @@
 - [ ] Join Google Developer Group at https://developers.google.com/community (+0.2 bonus)
 
 ### Submit
-- [ ] Go to https://googleliveagentchallenge.devpost.com/
+- [ ] Go to https://geminiliveagentchallenge.devpost.com/
 - [ ] Fill all form fields using `docs/hackathon-submission-metadata.txt`
 - [ ] Paste YouTube video URL
 - [ ] Paste blog post URL
@@ -75,6 +78,53 @@
 - [ ] Add architecture diagram screenshot
 - [ ] Confirm GDG membership
 - [ ] Submit before March 16, 2026 @ 5:00 PM PT
+
+---
+
+## Devpost Form Status (Verified March 7, 2026)
+
+**Form URL:** https://geminiliveagentchallenge.devpost.com/
+**Current status:** Draft, 1/5 steps done
+**Participants:** 7,489 registered
+
+### Step 1: Manage Team — DONE
+- [x] Team member listed (Steve Harlow / @sgharlow)
+
+### Step 2: Project Overview
+- [x] Project name: "Access Browse" (entered on form — minor: has space vs "AccessBrowse")
+- [ ] **Elevator pitch/tagline** — EMPTY on form. Paste: "Browse any website using voice commands, powered by Gemini AI"
+- [ ] **Thumbnail image** — MISSING. Need a project logo/screenshot (JPG/PNG/GIF, 3:2 ratio, max 5MB)
+
+### Step 3: Project Details
+- [ ] **About the project** (Markdown story) — EMPTY. Paste full text from `docs/SUBMISSION.md`
+- [ ] **Built with** (tech tags) — EMPTY. Paste: `python, fastapi, google-genai-sdk, gemini-live-api, gemini-computer-use, cloud-run, vertex-ai, react, typescript, chrome-extension, web-audio-api`
+- [ ] **"Try it out" links** — EMPTY. Add: `https://github.com/sgharlow/accessbrowse`
+- [ ] **Image gallery** — EMPTY. Upload architecture diagram from `docs/architecture-diagram.svg`
+- [ ] **Video demo link** — NOT READY. Must record and upload to YouTube first
+
+### Step 4: Additional Info (for judges)
+- [x] Submitter Type: "Individual"
+- [x] Country: "United States"
+- [x] Category: "UI Navigator"
+- [x] Project start date: "2/22/2026"
+- [ ] **URL to PUBLIC Code Repo** — EMPTY. Paste: `https://github.com/sgharlow/accessbrowse`
+- [x] Reproducible testing instructions in README: "Yes"
+- [ ] **URL to Proof of Google Cloud deployment** — NOT READY. Need screen recording of Cloud Run console or health endpoint after deploy
+- [ ] **Architecture diagram location** — Select "Image carousel" or "Code repo" + upload diagram to gallery
+- [ ] **BONUS: Published content URL** (+0.6pts) — NOT READY. Publish blog from `docs/blog-post.md` first
+- [ ] **BONUS: Automated Cloud Deployment link** (+0.2pts) — Paste link to `backend/deploy.sh` on GitHub
+- [ ] **BONUS: GDG public profile URL** (+0.2pts) — NOT READY. Join at `https://gdg.community.dev/`
+
+### Step 5: Finalization
+- [ ] Agree to Official Rules + Terms of Service
+- [ ] Click "Submit project" before March 16, 2026 @ 5:00 PM PT
+
+### IMPORTANT NOTES FROM RULES
+1. **Two-stage judging:** Stage One is pass/fail (all required fields filled?). Only Stage Two scores criteria. Missing any required field = automatic fail.
+2. **Video must be on YouTube or Vimeo** — publicly visible (unlisted OK, private NOT OK)
+3. **Blog post must be PUBLIC** and include: "you created the piece of content for the purposes of entering this hackathon" (already in draft)
+4. **UI Navigator category criterion:** "Does the agent demonstrate visual precision (understanding screen context) rather than blind clicking?" — well-addressed by coordinate-based browsing
+5. **NEW Projects Only rule:** Projects must be newly created during contest period (Feb 16 – Mar 16, 2026). Start date 2/22/2026 is within period.
 
 ---
 

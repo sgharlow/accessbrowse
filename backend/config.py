@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # GCP
-PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT", "accessbrowse-hackathon")
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT", "aicin-477004")
 LOCATION = os.getenv("GOOGLE_CLOUD_LOCATION", "us-central1")
 
 # Models
