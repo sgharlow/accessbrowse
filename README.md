@@ -1,3 +1,5 @@
+> 📦 **Archived** — Voice-driven accessibility browser, Chrome extension (hackathon build), early 2026. Not maintained. Code and history remain browsable. Sibling: accessvoice.
+
 # AccessBrowse — Voice-Driven Web Browser for Accessibility
 
 [![CI](https://github.com/sgharlow/accessbrowse/actions/workflows/ci.yml/badge.svg)](https://github.com/sgharlow/accessbrowse/actions/workflows/ci.yml)
